@@ -31,19 +31,16 @@ const PrivacyPage: React.FC = () => {
     privacySettings,
     updatePrivacySettings,
     isBound,
-    getStats
+    getStats,
+    exportRecords,
+    addExportRecord,
+    deleteExportRecord,
+    openExportRecord
   } = useApp();
 
   const [showExportModal, setShowExportModal] = useState(false);
   const [selectedExportType, setSelectedExportType] = useState<ExportType>('full');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [exportRecords, setExportRecords] = useState<ExportRecord[]>(() => {
-    try {
-      const raw = Taro.getStorageSync('recovery_exports');
-      if (raw) return JSON.parse(raw as string) as ExportRecord[];
-    } catch (_) {}
-    return [];
-  });
 
   const stats = getStats();
 
@@ -211,9 +208,7 @@ const PrivacyPage: React.FC = () => {
         expireDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
       };
 
-      const updatedRecords = [newExport, ...exportRecords];
-      setExportRecords(updatedRecords);
-      Taro.setStorageSync('recovery_exports', JSON.stringify(updatedRecords));
+      addExportRecord(newExport, htmlContent);
 
       Taro.showModal({
         title: '导出成功',
@@ -222,7 +217,7 @@ const PrivacyPage: React.FC = () => {
         cancelText: '关闭',
         success: (res) => {
           if (res.confirm) {
-            window.open(url, '_blank');
+            openExportRecord(newExport.id);
           }
         }
       });
@@ -235,15 +230,8 @@ const PrivacyPage: React.FC = () => {
   };
 
   const handleDownload = (record: ExportRecord) => {
-    console.log('[PrivacyPage] 下载/打开导出文件:', record.id);
-    if (record.fileUrl && record.fileUrl !== '#') {
-      window.open(record.fileUrl, '_blank');
-    } else {
-      const htmlContent = generateExportHTML(record.type);
-      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
-    }
+    console.log('[PrivacyPage] 打开导出文件:', record.id);
+    openExportRecord(record.id);
   };
 
   const handleShare = (record: ExportRecord) => {
@@ -255,14 +243,17 @@ const PrivacyPage: React.FC = () => {
       confirmColor: '#8B5CF6',
       success: (res) => {
         if (res.confirm) {
-          if (record.fileUrl && record.fileUrl !== '#') {
-            navigator.clipboard?.writeText(record.fileUrl).then(() => {
+          const content = getExportContent(record.id);
+          if (content) {
+            const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            navigator.clipboard?.writeText(url).then(() => {
               Taro.showToast({ title: '链接已复制到剪贴板', icon: 'success' });
             }).catch(() => {
               Taro.showToast({ title: '请手动复制链接', icon: 'none' });
             });
           } else {
-            Taro.showToast({ title: '链接已复制', icon: 'success' });
+            Taro.showToast({ title: '档案已过期，请重新生成', icon: 'none' });
           }
         }
       }
@@ -277,13 +268,22 @@ const PrivacyPage: React.FC = () => {
       confirmColor: '#F87171',
       success: (res) => {
         if (res.confirm) {
-          const updated = exportRecords.filter(r => r.id !== recordId);
-          setExportRecords(updated);
-          Taro.setStorageSync('recovery_exports', JSON.stringify(updated));
+          deleteExportRecord(recordId);
           Taro.showToast({ title: '已删除', icon: 'success' });
         }
       }
     });
+  };
+
+  const getExportContent = (recordId: string): string | undefined => {
+    try {
+      const raw = Taro.getStorageSync('recovery_export_contents');
+      if (raw) {
+        const contents = JSON.parse(raw as string) as Record<string, string>;
+        return contents[recordId];
+      }
+    } catch (_) {}
+    return undefined;
   };
 
   const getPrivacyItems = () => [
@@ -429,8 +429,8 @@ const PrivacyPage: React.FC = () => {
             导出历史记录
           </Text>
           
-          {exportHistory.length > 0 ? (
-            exportHistory.map((record) => (
+          {exportRecords.length > 0 ? (
+            exportRecords.map((record) => (
               <View key={record.id} className={styles.historyItem}>
                 <View className={styles.historyIcon}>
                   {getExportTypeIcon(record.type)}
@@ -458,6 +458,12 @@ const PrivacyPage: React.FC = () => {
                       onClick={() => handleDownload(record)}
                     >
                       打开
+                    </Button>
+                    <Button
+                      className={styles.historyAction}
+                      onClick={() => handleShare(record)}
+                    >
+                      分享
                     </Button>
                     <Button
                       className={styles.historyAction}

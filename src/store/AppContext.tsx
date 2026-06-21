@@ -6,6 +6,13 @@ import { mockCalendarDays, mockPreOpPhoto } from '@/data/mockCalendar';
 import { mockPhotos } from '@/data/mockPhotos';
 import { mockReminders } from '@/data/mockReminder';
 
+const VALID_CLINIC_CODES = new Set([
+  'MEI20240615001',
+  'MEI20240615002',
+  'MEI20240615003',
+  'MEI20240620001'
+]);
+
 const STORAGE_KEYS = {
   USER: 'recovery_user',
   IS_BOUND: 'recovery_is_bound',
@@ -13,7 +20,8 @@ const STORAGE_KEYS = {
   PHOTOS: 'recovery_photos',
   CALENDAR: 'recovery_calendar',
   PRIVACY: 'recovery_privacy',
-  EXPORTS: 'recovery_exports'
+  EXPORTS: 'recovery_exports',
+  EXPORT_CONTENTS: 'recovery_export_contents'
 };
 
 function loadFromStorage<T>(key: string, fallback: T): T {
@@ -44,6 +52,7 @@ interface AppState {
   preOpPhoto: string;
   isBound: boolean;
   exportRecords: ExportRecord[];
+  exportContents: Record<string, string>;
 }
 
 interface AppContextType extends AppState {
@@ -64,6 +73,10 @@ interface AppContextType extends AppState {
     reviewedPhotos: number;
     totalReminders: number;
   };
+  addExportRecord: (record: ExportRecord, content: string) => void;
+  getExportContent: (recordId: string) => string | undefined;
+  deleteExportRecord: (recordId: string) => void;
+  openExportRecord: (recordId: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -78,6 +91,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [privacySettings, setPrivacySettings] = useState<PrivacySettings>(() => loadFromStorage(STORAGE_KEYS.PRIVACY, mockPrivacySettings));
   const [preOpPhoto] = useState(mockPreOpPhoto);
   const [exportRecords, setExportRecords] = useState<ExportRecord[]>(() => loadFromStorage(STORAGE_KEYS.EXPORTS, []));
+  const [exportContents, setExportContents] = useState<Record<string, string>>(() => loadFromStorage(STORAGE_KEYS.EXPORT_CONTENTS, {}));
 
   useEffect(() => { saveToStorage(STORAGE_KEYS.IS_BOUND, isBound); }, [isBound]);
   useEffect(() => { saveToStorage(STORAGE_KEYS.USER, user); }, [user]);
@@ -86,6 +100,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   useEffect(() => { saveToStorage(STORAGE_KEYS.CALENDAR, calendarDays); }, [calendarDays]);
   useEffect(() => { saveToStorage(STORAGE_KEYS.PRIVACY, privacySettings); }, [privacySettings]);
   useEffect(() => { saveToStorage(STORAGE_KEYS.EXPORTS, exportRecords); }, [exportRecords]);
+  useEffect(() => { saveToStorage(STORAGE_KEYS.EXPORT_CONTENTS, exportContents); }, [exportContents]);
 
   const bindClinicCode = useCallback(async (code: string): Promise<{ success: boolean; message: string }> => {
     console.log('[AppContext] 绑定复诊码:', code);
@@ -103,6 +118,13 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
     if (!trimmed.startsWith('MEI')) {
       return { success: false, message: '复诊码无效，请检查是否正确输入。复诊码以MEI开头，可在术后须知单或机构客服处获取' };
+    }
+
+    if (!VALID_CLINIC_CODES.has(trimmed)) {
+      return {
+        success: false,
+        message: `复诊码「${trimmed}」无效。请确认机构给出的正确复诊码，或联系客服核实。正确的复诊码如 MEI20240615001，可在术后须知单上找到。`
+      };
     }
 
     const boundUser: UserInfo = {
@@ -184,38 +206,55 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     console.log('[AppContext] 撤回照片:', photoId);
     await new Promise(resolve => setTimeout(resolve, 300));
 
-    let withdrawnDate = '';
+    const photoToWithdraw = photos.find(p => p.id === photoId);
+    if (!photoToWithdraw) {
+      console.warn('[AppContext] 未找到要撤回的照片:', photoId);
+      return false;
+    }
+
+    const withdrawnDate = photoToWithdraw.date;
 
     setPhotos(prev => prev.map(p => {
       if (p.id === photoId) {
-        withdrawnDate = p.date;
         return { ...p, status: 'withdrawn' };
       }
       return p;
     }));
 
     if (withdrawnDate) {
-      setCalendarDays(prev => prev.map(day => {
-        if (day.date === withdrawnDate) {
-          const newUploaded = Math.max(0, day.photosUploaded - 1);
-          return {
-            ...day,
-            photosUploaded: newUploaded,
-            status: newUploaded >= day.photosRequired
-              ? 'completed'
-              : newUploaded > 0
-                ? 'today'
-                : day.date === new Date().toISOString().split('T')[0]
-                  ? 'today'
-                  : 'pending'
-          };
-        }
-        return day;
-      }));
+      setCalendarDays(prev => {
+        return prev.map(day => {
+          if (day.date === withdrawnDate) {
+            const activePhotosAfterWithdraw = photos.filter(p => 
+              p.date === withdrawnDate && p.status !== 'withdrawn' && p.id !== photoId
+            );
+            const newUploaded = activePhotosAfterWithdraw.length;
+            const today = new Date().toISOString().split('T')[0];
+            let newStatus: CalendarDay['status'] = 'pending';
+
+            if (newUploaded >= day.photosRequired) {
+              newStatus = 'completed';
+            } else if (newUploaded > 0 || day.date === today) {
+              newStatus = 'today';
+            } else if (day.date < today) {
+              newStatus = 'missed';
+            } else {
+              newStatus = 'pending';
+            }
+
+            return {
+              ...day,
+              photosUploaded: newUploaded,
+              status: newStatus
+            };
+          }
+          return day;
+        });
+      });
     }
 
     return true;
-  }, []);
+  }, [photos]);
 
   const updatePrivacySettings = useCallback((settings: Partial<PrivacySettings>) => {
     console.log('[AppContext] 更新隐私设置:', settings);
@@ -234,7 +273,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const getTodayPhotos = useCallback((): PhotoRecord[] => {
     const today = new Date().toISOString().split('T')[0];
-    return photos.filter(p => p.date === today);
+    return photos.filter(p => p.date === today && p.status !== 'withdrawn');
   }, [photos]);
 
   const getPendingFeedbackCount = useCallback((): number => {
@@ -261,6 +300,38 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return { totalDays, completedDays, totalPhotos, reviewedPhotos, totalReminders };
   }, [calendarDays, photos, reminders]);
 
+  const addExportRecord = useCallback((record: ExportRecord, content: string) => {
+    console.log('[AppContext] 添加导出记录:', record.id);
+    setExportRecords(prev => [record, ...prev]);
+    setExportContents(prev => ({ ...prev, [record.id]: content }));
+  }, []);
+
+  const getExportContent = useCallback((recordId: string): string | undefined => {
+    return exportContents[recordId];
+  }, [exportContents]);
+
+  const deleteExportRecord = useCallback((recordId: string) => {
+    console.log('[AppContext] 删除导出记录:', recordId);
+    setExportRecords(prev => prev.filter(r => r.id !== recordId));
+    setExportContents(prev => {
+      const next = { ...prev };
+      delete next[recordId];
+      return next;
+    });
+  }, []);
+
+  const openExportRecord = useCallback((recordId: string) => {
+    console.log('[AppContext] 打开导出记录:', recordId);
+    const content = exportContents[recordId];
+    if (!content) {
+      Taro.showToast({ title: '档案内容已过期，请重新生成', icon: 'none' });
+      return;
+    }
+    const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+  }, [exportContents]);
+
   const value: AppContextType = {
     user,
     project,
@@ -271,6 +342,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     preOpPhoto,
     isBound,
     exportRecords,
+    exportContents,
     bindClinicCode,
     uploadPhoto,
     withdrawPhoto,
@@ -281,7 +353,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     getPendingFeedbackCount,
     getTodayReminders,
     isAngleRequired,
-    getStats
+    getStats,
+    addExportRecord,
+    getExportContent,
+    deleteExportRecord,
+    openExportRecord
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

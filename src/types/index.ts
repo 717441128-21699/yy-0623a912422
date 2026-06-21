@@ -97,5 +97,6 @@ export interface ExportRecord {
   generateTime: string;
   status: 'generating' | 'completed' | 'failed';
   fileUrl?: string;
+  content?: string;
   expireDate: string;
 }
