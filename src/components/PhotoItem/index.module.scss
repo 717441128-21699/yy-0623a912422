@@ -1,0 +1,120 @@
+@use '@/styles/variables.scss' as *;
+
+.photoCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 150%;
+  overflow: hidden;
+  background: $color-bg-hover;
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.statusOverlay {
+  position: absolute;
+  top: $spacing-sm;
+  right: $spacing-sm;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  &.pending {
+    background: rgba($color-warning, 0.9);
+    color: #fff;
+  }
+
+  &.reviewed {
+    background: rgba($color-success, 0.9);
+    color: #fff;
+  }
+
+  &.withdrawn {
+    background: rgba($color-text-tertiary, 0.9);
+    color: #fff;
+  }
+}
+
+.info {
+  padding: $spacing-md;
+}
+
+.angle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.time {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-sm;
+}
+
+.symptoms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+}
+
+.symptomTag {
+  padding: 4rpx $spacing-xs;
+  background: $color-secondary-light;
+  color: $color-secondary;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+}
+
+.actions {
+  display: flex;
+  gap: $spacing-sm;
+  padding: 0 $spacing-md $spacing-md;
+}
+
+.actionBtn {
+  flex: 1;
+  @include button-reset;
+  height: $button-height-sm;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  border: 1px solid $color-border;
+  background: $color-bg-card;
+  color: $color-text-secondary;
+  transition: all $transition-base;
+
+  &.primary {
+    background: $color-primary;
+    border-color: $color-primary;
+    color: $color-text-white;
+  }
+
+  &.danger {
+    background: rgba($color-error, 0.05);
+    border-color: rgba($color-error, 0.3);
+    color: $color-error;
+  }
+
+  &:active {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}

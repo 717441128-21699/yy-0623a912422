@@ -1,0 +1,81 @@
+@use '@/styles/variables.scss' as *;
+
+.dayItem {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+  cursor: pointer;
+
+  &.today {
+    background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+    color: $color-text-white;
+    box-shadow: 0 4rpx 16rpx rgba($color-primary, 0.3);
+  }
+
+  &.completed {
+    background: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+
+  &.pending {
+    background: $color-bg-card;
+    color: $color-text-primary;
+    border: 1px solid $color-border;
+  }
+
+  &.missed {
+    background: rgba($color-error, 0.05);
+    color: $color-error;
+    border: 1px dashed $color-error;
+  }
+
+  &.future {
+    background: $color-bg-card;
+    color: $color-text-tertiary;
+    border: 1px dashed $color-border;
+  }
+
+  &.restricted {
+    &::after {
+      content: '复诊';
+      position: absolute;
+      top: -8rpx;
+      right: -8rpx;
+      padding: 2rpx 8rpx;
+      background: $color-secondary;
+      color: #fff;
+      font-size: 18rpx;
+      border-radius: $radius-xs;
+    }
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.dayNumber {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+}
+
+.photoProgress {
+  margin-top: 4rpx;
+  font-size: 18rpx;
+  opacity: 0.8;
+}
+
+.feedbackDot {
+  position: absolute;
+  bottom: 8rpx;
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background: $color-success;
+}

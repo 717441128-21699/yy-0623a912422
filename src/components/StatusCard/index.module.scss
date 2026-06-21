@@ -1,0 +1,108 @@
+@use '@/styles/variables.scss' as *;
+
+.card {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+
+  &:active {
+    opacity: 0.95;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  @include text-ellipsis;
+}
+
+.badge {
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  &.pending {
+    background: $color-primary-light;
+    color: $color-primary;
+  }
+
+  &.reviewed {
+    background: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+
+  &.warning {
+    background: rgba($color-warning, 0.1);
+    color: $color-warning;
+  }
+
+  &.attention {
+    background: rgba($color-error, 0.1);
+    color: $color-error;
+  }
+}
+
+.content {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  margin-bottom: $spacing-md;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: $spacing-md;
+  border-top: 1px solid $color-divider;
+}
+
+.doctor {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.time {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.notes {
+  margin-top: $spacing-md;
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+}
+
+.noteTag {
+  padding: $spacing-xs $spacing-sm;
+  background: $color-primary-light;
+  color: $color-primary;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+}
+
+.visitWarning {
+  margin-top: $spacing-md;
+  padding: $spacing-md;
+  background: rgba($color-error, 0.05);
+  border-left: 4rpx solid $color-error;
+  border-radius: $radius-xs;
+  font-size: $font-size-sm;
+  color: $color-error;
+  font-weight: $font-weight-medium;
+}

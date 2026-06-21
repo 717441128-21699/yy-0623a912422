@@ -1,0 +1,514 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 120rpx);
+}
+
+.header {
+  background: linear-gradient(135deg, $color-privacy 0%, #7C3AED 100%);
+  padding: $spacing-xl $spacing-lg;
+  color: $color-text-white;
+}
+
+.headerIcon {
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  margin-bottom: $spacing-md;
+}
+
+.headerTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $spacing-xs;
+}
+
+.headerDesc {
+  font-size: $font-size-sm;
+  opacity: 0.9;
+  line-height: $line-height-normal;
+}
+
+.content {
+  padding: $spacing-lg;
+  margin-top: -$spacing-lg;
+  position: relative;
+  z-index: 1;
+}
+
+.securityCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.securityIcon {
+  width: 64rpx;
+  height: 64rpx;
+  background: $color-privacy-light;
+  color: $color-privacy;
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-xl;
+  flex-shrink: 0;
+}
+
+.securityText {
+  flex: 1;
+}
+
+.securityTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.securityDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin: $spacing-lg 0 $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.sectionIcon {
+  width: 32rpx;
+  height: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-md;
+}
+
+.exportSection {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+}
+
+.exportHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-md;
+}
+
+.exportInfo {
+  flex: 1;
+}
+
+.exportTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.exportDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.exportBtn {
+  @include button-reset;
+  height: $button-height-md;
+  padding: 0 $spacing-lg;
+  background: $color-privacy;
+  color: $color-text-white;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+  flex-shrink: 0;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+
+  &.disabled {
+    background: $color-text-disabled;
+  }
+}
+
+.exportOptions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-sm;
+  margin-top: $spacing-md;
+}
+
+.exportOption {
+  padding: $spacing-md;
+  background: $color-bg-page;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-xs;
+  transition: all $transition-base;
+
+  &.selected {
+    border-color: $color-privacy;
+    background: $color-privacy-light;
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.exportOptionIcon {
+  font-size: $font-size-xl;
+}
+
+.exportOptionName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.exportOptionDesc {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  text-align: center;
+}
+
+.autoDeleteSection {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+}
+
+.autoDeleteHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.autoDeleteTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.autoDeleteValue {
+  font-size: $font-size-sm;
+  color: $color-privacy;
+  font-weight: $font-weight-medium;
+}
+
+.autoDeleteOptions {
+  display: flex;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.autoDeleteOption {
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-page;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  transition: all $transition-base;
+
+  &.selected {
+    background: $color-privacy;
+    border-color: $color-privacy;
+    color: $color-text-white;
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.exportHistory {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+}
+
+.historyItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md 0;
+  border-bottom: 1px solid $color-divider;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.historyIcon {
+  width: 56rpx;
+  height: 56rpx;
+  background: $color-primary-light;
+  color: $color-primary;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-lg;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+}
+
+.historyInfo {
+  flex: 1;
+}
+
+.historyType {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.historyTime {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.historyStatus {
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  &.completed {
+    background: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+
+  &.generating {
+    background: $color-primary-light;
+    color: $color-primary;
+  }
+
+  &.failed {
+    background: rgba($color-error, 0.1);
+    color: $color-error;
+  }
+}
+
+.historyAction {
+  @include button-reset;
+  height: $button-height-sm;
+  padding: 0 $spacing-md;
+  background: $color-bg-page;
+  border: 1px solid $color-border;
+  border-radius: $radius-button;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  margin-left: $spacing-sm;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.privacyTips {
+  background: $color-privacy-light;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-top: $spacing-lg;
+}
+
+.tipsTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-privacy;
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.tipsList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.tipItem {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-sm;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.tipIcon {
+  color: $color-privacy;
+  flex-shrink: 0;
+  font-size: $font-size-sm;
+}
+
+.exportModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+}
+
+.exportModalContent {
+  width: 100%;
+  background: $color-bg-card;
+  border-radius: $radius-xl $radius-xl 0 0;
+  padding: $spacing-lg;
+}
+
+.exportModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.exportModalTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.exportModalClose {
+  font-size: $font-size-xl;
+  color: $color-text-tertiary;
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.exportModalDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-lg;
+  line-height: $line-height-normal;
+}
+
+.exportModalActions {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-xl;
+}
+
+.exportModalBtn {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-lg;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+
+  &.cancel {
+    background: $color-bg-hover;
+    color: $color-text-secondary;
+  }
+
+  &.confirm {
+    background: linear-gradient(135deg, $color-privacy 0%, #7C3AED 100%);
+    color: $color-text-white;
+  }
+
+  &:active {
+    opacity: 0.9;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+  }
+}
+
+.emptyHistory {
+  text-align: center;
+  padding: $spacing-xl $spacing-lg;
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+}
+
+.loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-xxl;
+  text-align: center;
+}
+
+.loadingIcon {
+  font-size: 80rpx;
+  margin-bottom: $spacing-lg;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loadingText {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.loadingDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}

@@ -1,0 +1,85 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+}
+
+.item {
+  padding: $spacing-lg;
+  border-bottom: 1px solid $color-divider;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:active {
+    background: $color-bg-hover;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.title {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  flex: 1;
+  margin-right: $spacing-md;
+}
+
+.switch {
+  position: relative;
+  width: 96rpx;
+  height: 52rpx;
+  background: $color-border;
+  border-radius: $radius-round;
+  transition: background $transition-base;
+  flex-shrink: 0;
+
+  &.active {
+    background: $color-privacy;
+  }
+}
+
+.switchKnob {
+  position: absolute;
+  top: 4rpx;
+  left: 4rpx;
+  width: 44rpx;
+  height: 44rpx;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
+  transition: transform $transition-base;
+}
+
+.switch.active .switchKnob {
+  transform: translateX(44rpx);
+}
+
+.description {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  padding-right: $spacing-xl;
+}
+
+.privacyBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2rpx $spacing-xs;
+  background: $color-privacy-light;
+  color: $color-privacy;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  margin-left: $spacing-sm;
+}

@@ -1,0 +1,574 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 120rpx);
+}
+
+.filterTabs {
+  display: flex;
+  background: $color-bg-card;
+  padding: $spacing-md $spacing-lg;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.filterTab {
+  flex: 1;
+  text-align: center;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  transition: all $transition-base;
+
+  &.active {
+    background: $color-primary;
+    color: $color-text-white;
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.tabCount {
+  display: inline-block;
+  margin-left: $spacing-xs;
+  padding: 0 $spacing-sm;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: $radius-round;
+  font-size: $font-size-xs;
+
+  .active & {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.content {
+  padding: $spacing-lg;
+}
+
+.statsCard {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  color: $color-text-white;
+}
+
+.statsTitle {
+  font-size: $font-size-md;
+  opacity: 0.9;
+  margin-bottom: $spacing-md;
+}
+
+.statsRow {
+  display: flex;
+  justify-content: space-around;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statNumber {
+  font-size: 48rpx;
+  font-weight: $font-weight-bold;
+  line-height: 1;
+  margin-bottom: $spacing-xs;
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  opacity: 0.8;
+}
+
+.photosList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.compareModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  padding: $spacing-xl;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-xl;
+}
+
+.modalTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+}
+
+.closeBtn {
+  width: 64rpx;
+  height: 64rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-white;
+  font-size: $font-size-lg;
+}
+
+.compareContainer {
+  flex: 1;
+  display: flex;
+  gap: $spacing-md;
+  margin-bottom: $spacing-xl;
+}
+
+.comparePane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.compareLabel {
+  font-size: $font-size-sm;
+  color: $color-text-white;
+  margin-bottom: $spacing-md;
+  padding: $spacing-xs $spacing-md;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $radius-round;
+}
+
+.compareImage {
+  flex: 1;
+  width: 100%;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.compareImg {
+  width: 100%;
+  height: 100%;
+}
+
+.compareInfo {
+  margin-top: $spacing-md;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: $font-size-sm;
+}
+
+.feedbackModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+}
+
+.feedbackContent {
+  width: 100%;
+  background: $color-bg-card;
+  border-radius: $radius-xl $radius-xl 0 0;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.feedbackHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-lg;
+  border-bottom: 1px solid $color-divider;
+}
+
+.feedbackClose {
+  font-size: $font-size-xl;
+  color: $color-text-tertiary;
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feedbackBody {
+  padding: $spacing-lg;
+}
+
+.feedbackPhoto {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  margin-bottom: $spacing-lg;
+  background: $color-bg-hover;
+}
+
+.feedbackImg {
+  width: 100%;
+  height: 100%;
+}
+
+.feedbackMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.feedbackAngle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.feedbackTime {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.feedbackStatus {
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  &.pending {
+    background: $color-primary-light;
+    color: $color-primary;
+  }
+
+  &.reviewed {
+    background: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+}
+
+.symptomsSection {
+  background: $color-secondary-light;
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.symptomsTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-secondary;
+  margin-bottom: $spacing-sm;
+}
+
+.symptomsTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+}
+
+.symptomTag {
+  padding: $spacing-xs $spacing-sm;
+  background: rgba(255, 255, 255, 0.8);
+  color: $color-secondary;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+}
+
+.doctorSection {
+  background: $color-primary-light;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+}
+
+.doctorHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.doctorAvatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: $color-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.doctorInfo {
+  flex: 1;
+}
+
+.doctorName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.doctorTitle {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.feedbackText {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  line-height: $line-height-loose;
+  margin-bottom: $spacing-md;
+}
+
+.notesSection {
+  margin-top: $spacing-md;
+}
+
+.notesTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+}
+
+.notesList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.noteItem {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: $radius-md;
+}
+
+.noteIcon {
+  color: $color-primary;
+  font-size: $font-size-sm;
+  flex-shrink: 0;
+}
+
+.noteText {
+  flex: 1;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  line-height: $line-height-normal;
+}
+
+.visitWarning {
+  background: rgba($color-error, 0.05);
+  border-left: 6rpx solid $color-error;
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  margin-top: $spacing-md;
+}
+
+.visitTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-error;
+  margin-bottom: $spacing-xs;
+}
+
+.visitDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.emptyState {
+  text-align: center;
+  padding: $spacing-xxl $spacing-lg;
+}
+
+.emptyIcon {
+  font-size: 120rpx;
+  margin-bottom: $spacing-lg;
+  opacity: 0.5;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-xs;
+}
+
+.emptyDesc {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  line-height: $line-height-loose;
+}
+
+.actionBtn {
+  @include button-reset;
+  height: $button-height-md;
+  padding: 0 $spacing-lg;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+
+  &.primary {
+    background: $color-primary;
+    color: $color-text-white;
+  }
+
+  &.secondary {
+    background: $color-bg-card;
+    color: $color-primary;
+    border: 2rpx solid $color-primary;
+  }
+
+  &.danger {
+    background: rgba($color-error, 0.05);
+    color: $color-error;
+    border: 2rpx solid rgba($color-error, 0.3);
+  }
+
+  &:active {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+.withdrawConfirm {
+  padding: $spacing-lg;
+}
+
+.withdrawTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  text-align: center;
+  margin-bottom: $spacing-md;
+}
+
+.withdrawDesc {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  text-align: center;
+  line-height: $line-height-loose;
+  margin-bottom: $spacing-xl;
+}
+
+.withdrawActions {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.withdrawBtn {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-lg;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+
+  &.cancel {
+    background: $color-bg-hover;
+    color: $color-text-secondary;
+  }
+
+  &.confirm {
+    background: $color-error;
+    color: $color-text-white;
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.pendingBanner {
+  background: linear-gradient(135deg, $color-warning 0%, #F59E0B 100%);
+  color: #fff;
+  padding: $spacing-md $spacing-lg;
+  margin: 0 $spacing-lg $spacing-md;
+  border-radius: $radius-lg;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.pendingText {
+  flex: 1;
+  font-size: $font-size-sm;
+  line-height: $line-height-normal;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.sectionDot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: $color-primary;
+}
+
+.dateGroup {
+  margin-bottom: $spacing-xl;
+}
+
+.dateHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+}
+
+.dateText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.dateRecovery {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
+.photosGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+}
