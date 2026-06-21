@@ -53,6 +53,18 @@
   }
 }
 
+.requiredBadge {
+  position: absolute;
+  top: $spacing-sm;
+  left: $spacing-sm;
+  padding: $spacing-xs $spacing-sm;
+  background: rgba($color-error, 0.9);
+  color: #fff;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
 .info {
   padding: $spacing-md;
 }

@@ -11,6 +11,7 @@ interface PhotoItemProps {
   onWithdraw?: (id: string) => void;
   onViewFeedback?: (photo: PhotoRecord) => void;
   onCompare?: (photo: PhotoRecord) => void;
+  isRequiredAngle?: boolean;
 }
 
 const PhotoItem: React.FC<PhotoItemProps> = ({
@@ -18,13 +19,16 @@ const PhotoItem: React.FC<PhotoItemProps> = ({
   showActions = false,
   onWithdraw,
   onViewFeedback,
-  onCompare
+  onCompare,
+  isRequiredAngle = false
 }) => {
   const statusText: Record<string, string> = {
     pending: '待查看',
     reviewed: '已回复',
     withdrawn: '已撤回'
   };
+
+  const canWithdraw = photo.status === 'pending' && onWithdraw && !isRequiredAngle;
 
   const handlePreview = () => {
     Taro.previewImage({
@@ -62,10 +66,16 @@ const PhotoItem: React.FC<PhotoItemProps> = ({
         <View className={classnames(styles.statusOverlay, styles[photo.status])}>
           {statusText[photo.status]}
         </View>
+        {isRequiredAngle && photo.status === 'pending' && (
+          <View className={styles.requiredBadge}>必拍</View>
+        )}
       </View>
       
       <View className={styles.info}>
-        <Text className={styles.angle}>{photo.angle}</Text>
+        <Text className={styles.angle}>
+          {photo.angle}
+          {isRequiredAngle && <Text style={{ color: '#F87171', marginLeft: 8 }}>*</Text>}
+        </Text>
         <Text className={styles.time}>{photo.uploadTime}</Text>
         {symptomTags.length > 0 && (
           <View className={styles.symptoms}>
@@ -94,7 +104,7 @@ const PhotoItem: React.FC<PhotoItemProps> = ({
               对比术前
             </Button>
           )}
-          {photo.status === 'pending' && onWithdraw && (
+          {canWithdraw && (
             <Button
               className={classnames(styles.actionBtn, styles.danger)}
               onClick={() => onWithdraw(photo.id)}

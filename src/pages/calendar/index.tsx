@@ -48,16 +48,26 @@ const CalendarPage: React.FC = () => {
 
     setIsBinding(true);
     try {
-      const success = await bindClinicCode(bindCode.trim().toUpperCase());
-      if (success) {
+      const result = await bindClinicCode(bindCode.trim());
+      if (result.success) {
         Taro.showToast({ title: '绑定成功', icon: 'success' });
         setBindCode('');
       } else {
-        Taro.showToast({ title: '复诊码无效，请检查', icon: 'none' });
+        Taro.showModal({
+          title: '绑定失败',
+          content: result.message,
+          showCancel: false,
+          confirmText: '我知道了'
+        });
       }
     } catch (error) {
       console.error('[CalendarPage] 绑定失败:', error);
-      Taro.showToast({ title: '绑定失败，请重试', icon: 'none' });
+      Taro.showModal({
+        title: '绑定失败',
+        content: '网络异常，请检查网络后重试',
+        showCancel: false,
+        confirmText: '我知道了'
+      });
     } finally {
       setIsBinding(false);
     }

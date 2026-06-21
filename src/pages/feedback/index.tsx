@@ -17,7 +17,8 @@ const FeedbackPage: React.FC = () => {
     withdrawPhoto,
     isBound,
     getStats,
-    project
+    project,
+    isAngleRequired
   } = useApp();
 
   const [filter, setFilter] = useState<FilterType>('all');
@@ -202,7 +203,12 @@ const FeedbackPage: React.FC = () => {
                         showActions
                         onViewFeedback={photo.status === 'reviewed' ? handleViewFeedback : undefined}
                         onCompare={handleCompare}
-                        onWithdraw={photo.status === 'pending' ? handleWithdrawClick : undefined}
+                        onWithdraw={
+                          photo.status === 'pending' && !isAngleRequired(photo.angleId)
+                            ? handleWithdrawClick
+                            : undefined
+                        }
+                        isRequiredAngle={isAngleRequired(photo.angleId)}
                       />
                     ))}
                   </View>
